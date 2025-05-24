@@ -45,12 +45,14 @@ class FirstViewController: UIViewController {
         button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         // Aumentar o tamanho e colocar em negrito
+        button.isEnabled = false
         return button
     }()
     // cria o botao pro usu. enviar o nome - det. ui
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        nameTextField.delegate = self
         
         view.backgroundColor = UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1)
         
@@ -95,4 +97,21 @@ class FirstViewController: UIViewController {
         // Navegar para a segunda tela
         navigationController?.pushViewController(secondViewController, animated: true)
     }
+}
+
+extension FirstViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        
+        if let currentText = textField.text as NSString? {
+            let updatedText = currentText.replacingCharacters(in: range, with: string)
+            if updatedText.count > 3 {
+                sendButton.isEnabled = true
+            }
+        }
+        
+        return true
+    }
+    
 }
