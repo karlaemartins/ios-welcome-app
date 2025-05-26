@@ -8,7 +8,7 @@
 import UIKit
 
 class FirstViewController: UIViewController {
-//fvc herda de uivc
+    // fvc herda de uivc
     
     private let instructionLabel: UILabel = {
         let label = UILabel()
@@ -19,7 +19,7 @@ class FirstViewController: UIViewController {
         label.textColor = UIColor(red: 96/255, green: 108/255, blue: 56/255, alpha: 1) // RGB: 96, 108, 56
         return label
     }()
-    //instruir o usuario a digitar - det. ui
+    // instruir o usuario a digitar - det. ui
     
     private let nameTextField: UITextField = {
         let textField = UITextField()
@@ -28,23 +28,28 @@ class FirstViewController: UIViewController {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor(red: 250/255, green: 237/255, blue: 205/255, alpha: 1).cgColor
         textField.layer.cornerRadius = 5
-    //cria o campo de texto pro usuario digitar o nome - det. ui
+        // cria o campo de texto pro usuario digitar o nome - det. ui
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
         textField.leftView = paddingView
         textField.leftViewMode = .always
         return textField
     }()
-    //add espaco de margem a esquerda
+    // add espaco de margem a esquerda
     
     private let sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Enviar", for: .normal)
-        button.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20) // Aumentar o tamanho e colocar em negrito
+        
+        // Cores do título para estados normal e desabilitado
+        button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1), for: .normal)    // branco ativado
+        button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 0.5), for: .disabled)  // branco desativado
+        
+        // Background inicial para desativado
+        button.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)
+        
         button.layer.cornerRadius = 10
-        button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1), for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        // Aumentar o tamanho e colocar em negrito
         button.isEnabled = false
         return button
     }()
@@ -97,6 +102,16 @@ class FirstViewController: UIViewController {
         // Navegar para a segunda tela
         navigationController?.pushViewController(secondViewController, animated: true)
     }
+    //funcao de habilitar/desabilitar
+    private func updateSendButtonState(for text: String) {
+        if text.count >= 3 { //mudei para 3 caracteres
+            sendButton.isEnabled = true
+            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)  // cor 100% quando o botao está ativo
+        } else { //add else para desabilitar caso menor que 3.
+            sendButton.isEnabled = false
+            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)  // cor opaca quando está desativado
+        }
+    }
 }
 
 extension FirstViewController: UITextFieldDelegate {
@@ -106,12 +121,10 @@ extension FirstViewController: UITextFieldDelegate {
         
         if let currentText = textField.text as NSString? {
             let updatedText = currentText.replacingCharacters(in: range, with: string)
-            if updatedText.count > 3 {
-                sendButton.isEnabled = true
-            }
+            updateSendButtonState(for: updatedText) //atualiza o botao de acordo com que o usuario digita
         }
         
         return true
     }
-    
 }
+
