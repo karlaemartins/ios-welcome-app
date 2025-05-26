@@ -3,7 +3,7 @@
 Este projeto foi desenvolvido com fins **educacionais**, como parte dos meus estudos iniciais de desenvolvimento iOS com Swift. O objetivo principal foi entender como criar um app básico com **duas telas**, **navegação entre elas**, **envio de dados de uma tela para outra**, e **interações simples com o usuário** usando UIKit.
 
 ## A proposta do app:
-1. Exibir uma **primeira tela** que solicite que o usuário o envio de algum dado, neste caso, o seu nome;
+1. Exibir uma **primeira tela** que solicite do usuário o envio de algum dado, neste caso, o seu nome;
 2. Ao preencher e clicar em "Enviar", navegar para a **segunda tela**;
 3. A segunda tela exibe uma **mensagem personalizada de boas-vindas**, usando o nome que foi inserido.
 
