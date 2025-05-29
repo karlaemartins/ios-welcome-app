@@ -10,7 +10,8 @@ import UIKit
 class SecondViewController: UIViewController {
 
     var userName: String = ""
-    
+    var userAvatarName: String?  // <- nova propriedade para o avatar
+
     private let welcomeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -19,54 +20,67 @@ class SecondViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
+
+    private let avatarImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 50
+        imageView.clipsToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1).cgColor
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         view.backgroundColor = UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1)
         
-        // Verificar se o nome foi passado
+        // Texto de boas-vindas
         let greetingText = "Olá \(userName), seja bem-vindo(a) ao App Envia & Recebe!"
-        
-        //permite adicionar estilo ao texto
         let attributedString = NSMutableAttributedString(string: greetingText)
-        
-        //define a cor do texto
         let fullRange = NSRange(location: 0, length: greetingText.count)
         attributedString.addAttribute(.foregroundColor, value: UIColor(red: 96/255, green: 108/255, blue: 56/255, alpha: 1), range: fullRange)
-        
-        // Aplicar o texto formatado na label
         welcomeLabel.attributedText = attributedString
         
-        // Adicionar a label à view
-        view.addSubview(welcomeLabel)
+        // Configura avatar
+        if let avatarName = userAvatarName, let avatarImage = UIImage(named: avatarName) {
+            avatarImageView.image = avatarImage
+        } else {
+            avatarImageView.image = nil
+        }
         
-        // Configurar constraints para a label
+        // Adiciona subviews
+        view.addSubview(welcomeLabel)
+        view.addSubview(avatarImageView)
+        
+        // Constraints
         NSLayoutConstraint.activate([
+            avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            avatarImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            welcomeLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 30),
             welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            welcomeLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             welcomeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             welcomeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
-        // Configurar o botão de voltar (chevron)
+        // Botão voltar (chevron)
         let backButton = UIBarButtonItem()
-        backButton.image = UIImage(systemName: "chevron.left") // Chevron de voltar
-        backButton.tintColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1) // Cor do botão de voltar (RGB: 212, 163, 115)
-        
-        // Ação do botão de voltar: voltar para a primeira tela
+        backButton.image = UIImage(systemName: "chevron.left")
+        backButton.tintColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)
         backButton.target = self
         backButton.action = #selector(backButtonTapped)
         navigationItem.leftBarButtonItem = backButton
         
-        // Configurar a navegação
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1) // Cor do botão de voltar
+        navigationController?.navigationBar.tintColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)
     }
     
     @objc func backButtonTapped() {
-        // Voltar para a primeira tela
         navigationController?.popViewController(animated: true)
     }
 }
