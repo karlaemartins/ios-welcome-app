@@ -13,10 +13,10 @@ class FirstViewController: UIViewController {
     private let instructionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Por favor, digite seu nome:"
-        label.font = UIFont.boldSystemFont(ofSize: 24) // Tamanho maior e negrito
-        label.textAlignment = .center
-        label.textColor = UIColor(red: 96/255, green: 108/255, blue: 56/255, alpha: 1) // RGB: 96, 108, 56
+        label.text = "Nome:"
+        label.font = UIFont.boldSystemFont(ofSize: 18) // Tamanho maior e negrito
+        label.textAlignment = .left
+        label.textColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
         return label
     }()
     // instruir o usuario a digitar - det. ui
@@ -26,7 +26,7 @@ class FirstViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Nome"
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor(red: 250/255, green: 237/255, blue: 205/255, alpha: 1).cgColor
+        textField.layer.borderColor = UIColor(red: 255/255, green: 196/255, blue: 93/255, alpha: 0.5).cgColor
         textField.layer.cornerRadius = 5
         // cria o campo de texto pro usuario digitar o nome - det. ui
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
@@ -47,7 +47,7 @@ class FirstViewController: UIViewController {
         button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 0.5), for: .disabled)  // branco desativado
         
         // Background inicial para desativado
-        button.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)
+        button.backgroundColor = UIColor(red: 247/255, green: 105/255, blue: 185/255, alpha: 0.5)
         
         button.layer.cornerRadius = 10
         button.isEnabled = false
@@ -59,7 +59,11 @@ class FirstViewController: UIViewController {
         super.viewDidLoad()
         nameTextField.delegate = self
         
-        view.backgroundColor = UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1)
+        // Cor de fundo da view
+    view.backgroundColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        
+    title = "Cadastro"
+        navigationController?.navigationBar.prefersLargeTitles = false
         
         // elementos a serem apresentados
         view.addSubview(instructionLabel)
@@ -69,9 +73,10 @@ class FirstViewController: UIViewController {
         // Configurar constraints
         NSLayoutConstraint.activate([
             instructionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
-            instructionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            instructionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
+            instructionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            instructionLabel.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
             instructionLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
+
             
             nameTextField.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: 25),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -87,6 +92,25 @@ class FirstViewController: UIViewController {
         // Ação do botão
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1),
+            .font: UIFont.boldSystemFont(ofSize: 20)
+        ]
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
+    }
+
     
     @objc func sendButtonTapped() {
         guard let userName = nameTextField.text, !userName.isEmpty else {
@@ -104,10 +128,10 @@ class FirstViewController: UIViewController {
     private func updateSendButtonState(for text: String) {
         if text.count >= 3 {
             sendButton.isEnabled = true
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)
+            sendButton.backgroundColor = UIColor(red: 247/255, green: 105/255, blue: 85/255, alpha: 1)
         } else {
             sendButton.isEnabled = false
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)
+            sendButton.backgroundColor = UIColor(red: 247/255, green: 105/255, blue: 85/255, alpha: 0.5)
         }
     }
 }

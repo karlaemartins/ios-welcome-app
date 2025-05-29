@@ -61,8 +61,8 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
+        view.backgroundColor = .white
         view.addSubview(welcomeLabel)
         view.addSubview(gifImageView)
         view.addSubview(continueButton)
@@ -92,6 +92,8 @@ class WelcomeViewController: UIViewController {
         }
         
         continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
+        
+        navigationItem.backButtonTitle = ""
     }
     
     @objc private func continueTapped() {
