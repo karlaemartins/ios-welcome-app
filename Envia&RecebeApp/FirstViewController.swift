@@ -48,7 +48,7 @@ class FirstViewController: UIViewController {
         button.setTitle("Escolher Agora", for: .normal)
         button.backgroundColor = UIColor(red: 255/255, green: 196/255, blue: 93/255, alpha: 1)
         button.layer.cornerRadius = 10
-        button.setTitleColor(UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
         return button
     }()
@@ -59,7 +59,7 @@ class FirstViewController: UIViewController {
         button.setTitle("Escolher Depois", for: .normal)
         button.backgroundColor = UIColor(red: 255/255, green: 196/255, blue: 93/255, alpha: 1)
         button.layer.cornerRadius = 10
-        button.setTitleColor(UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
         return button
     }()
@@ -88,9 +88,8 @@ class FirstViewController: UIViewController {
         nameTextField.delegate = self
         view.backgroundColor = .white
         title = "Cadastro"
-        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.backButtonTitle = ""
 
-        // Adiciona subviews
         view.addSubview(realNameLabel)
         view.addSubview(nameTextField)
         view.addSubview(avatarLabel)
@@ -98,30 +97,11 @@ class FirstViewController: UIViewController {
         view.addSubview(avatarButton2)
         view.addSubview(sendButton)
 
-        // Setup ações
         avatarButton1.addTarget(self, action: #selector(chooseAvatarNow), for: .touchUpInside)
         avatarButton2.addTarget(self, action: #selector(chooseAvatarLater), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
 
         setupConstraints()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-
-        appearance.titleTextAttributes = [
-            .foregroundColor: UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1),
-            .font: UIFont.boldSystemFont(ofSize: 20)
-        ]
-
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
     }
 
     // MARK: - Constraints Setup
@@ -151,7 +131,7 @@ class FirstViewController: UIViewController {
             avatarButton2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             avatarButton2.heightAnchor.constraint(equalToConstant: 40),
 
-            sendButton.topAnchor.constraint(equalTo: avatarButton1.bottomAnchor, constant: 40),
+            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
             sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             sendButton.widthAnchor.constraint(equalToConstant: 200),
             sendButton.heightAnchor.constraint(equalToConstant: 50)
@@ -171,8 +151,6 @@ class FirstViewController: UIViewController {
     @objc private func chooseAvatarLater() {
         selectedAvatarName = "avatar7"
         print("Avatar padrão definido: avatar7")
-
-        // Atualiza o estado do botão usando o texto atual do nome
         updateSendButtonState(for: nameTextField.text ?? "")
     }
 

@@ -50,7 +50,7 @@ class AvatarSelectionViewController: UIViewController {
     private func setupAvatarButtons() {
         let rowsStack = UIStackView()
         rowsStack.axis = .vertical
-        rowsStack.alignment = .center
+        rowsStack.alignment = .fill
         rowsStack.spacing = 15
         rowsStack.translatesAutoresizingMaskIntoConstraints = false
 
@@ -87,7 +87,8 @@ class AvatarSelectionViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             rowsStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
-            rowsStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            rowsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            rowsStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
 

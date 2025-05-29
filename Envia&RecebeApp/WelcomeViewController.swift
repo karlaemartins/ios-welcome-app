@@ -81,8 +81,7 @@ class WelcomeViewController: UIViewController {
             continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
             continueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             continueButton.widthAnchor.constraint(equalToConstant: 220),
-            continueButton.heightAnchor.constraint(equalToConstant: 55),
-            continueButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40)
+            continueButton.heightAnchor.constraint(equalToConstant: 55)
         ])
         
         if let path = Bundle.main.path(forResource: "gif_01", ofType: "gif"),
@@ -93,7 +92,43 @@ class WelcomeViewController: UIViewController {
         
         continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
         
+        // Mantém o backButtonTitle vazio para a próxima tela
         navigationItem.backButtonTitle = ""
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Remove linha da navigation bar só nesta tela
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear  // Remove a linha
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        
+        navigationController?.navigationBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Restaura a configuração global do SceneDelegate ao sair desta tela
+        if let navBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .white
+            appearance.titleTextAttributes = [
+                .foregroundColor: UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1),
+                .font: UIFont.boldSystemFont(ofSize: 20)
+            ]
+            navBar.standardAppearance = appearance
+            navBar.scrollEdgeAppearance = appearance
+            navBar.compactAppearance = appearance
+            navBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
+        }
     }
     
     @objc private func continueTapped() {
