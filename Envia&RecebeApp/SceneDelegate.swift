@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
 
-        let navigationController = UINavigationController(rootViewController: FirstViewController())
+        let navigationController = UINavigationController(rootViewController: WelcomeViewController())
         //inicia o app com a tela FirstViewController mas dentro de um UINav. que permite usar o botao de voltar e navegagar entre as telas.
         
         window?.rootViewController = navigationController

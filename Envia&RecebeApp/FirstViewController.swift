@@ -68,15 +68,17 @@ class FirstViewController: UIViewController {
         
         // Configurar constraints
         NSLayoutConstraint.activate([
-            instructionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            instructionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
             instructionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            instructionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
+            instructionLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
             
-            nameTextField.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: 20),
+            nameTextField.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: 25),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
             
-            sendButton.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
+            sendButton.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 25),
             sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             sendButton.widthAnchor.constraint(equalToConstant: 200),
             sendButton.heightAnchor.constraint(equalToConstant: 50)
@@ -87,7 +89,6 @@ class FirstViewController: UIViewController {
     }
     
     @objc func sendButtonTapped() {
-        // Verificar se o campo de texto foi preenchido com algo, se nao erro.
         guard let userName = nameTextField.text, !userName.isEmpty else {
             let alert = UIAlertController(title: "Erro", message: "Por favor, insira seu nome.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -95,21 +96,18 @@ class FirstViewController: UIViewController {
             return
         }
         
-        // Criar o SecondViewController e passar o nome
         let secondViewController = SecondViewController()
         secondViewController.userName = userName
-        
-        // Navegar para a segunda tela
         navigationController?.pushViewController(secondViewController, animated: true)
     }
-    //funcao de habilitar/desabilitar
+    
     private func updateSendButtonState(for text: String) {
-        if text.count >= 3 { //mudei para 3 caracteres
+        if text.count >= 3 {
             sendButton.isEnabled = true
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)  // cor 100% quando o botao está ativo
-        } else { //add else para desabilitar caso menor que 3.
+            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)
+        } else {
             sendButton.isEnabled = false
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)  // cor opaca quando está desativado
+            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)
         }
     }
 }
@@ -121,10 +119,8 @@ extension FirstViewController: UITextFieldDelegate {
         
         if let currentText = textField.text as NSString? {
             let updatedText = currentText.replacingCharacters(in: range, with: string)
-            updateSendButtonState(for: updatedText) //atualiza o botao de acordo com que o usuario digita
+            updateSendButtonState(for: updatedText)
         }
-        
         return true
     }
 }
-
