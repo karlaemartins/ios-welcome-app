@@ -45,3 +45,7 @@ Também possui:
 
 ### Dificuldades encontradas: 
 Destacar o dado recebido na segunda tela (em estudo). 
+
+https://github.com/user-attachments/assets/18f9e122-f35d-4e21-a92a-dd6135634eff
+
+
