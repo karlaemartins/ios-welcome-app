@@ -8,123 +8,252 @@
 import UIKit
 
 class FirstViewController: UIViewController {
-    // fvc herda de uivc
+
+    struct Constants {
+        static let textColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
+        
+        static let yellowColorBorder = UIColor(red: 255/255, green: 196/255, blue: 93/255, alpha: 0.5).cgColor
+        
+        static let yellowColor = UIColor(red: 255/255, green: 196/255, blue: 93/255, alpha: 1)
+        
+        static let orangeColorDisable = UIColor(red: 247/255, green: 105/255, blue: 85/255, alpha: 0.5)
+        
+        static let orangeColorEnable = UIColor(red: 247/255, green: 105/255, blue: 85/255, alpha: 1)
+    }
     
-    private let instructionLabel: UILabel = {
+    // Define dados da tela, labels, campos de texto, botões..
+    private let realNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Por favor, digite seu nome:"
-        label.font = UIFont.boldSystemFont(ofSize: 24) // Tamanho maior e negrito
-        label.textAlignment = .center
-        label.textColor = UIColor(red: 96/255, green: 108/255, blue: 56/255, alpha: 1) // RGB: 96, 108, 56
+        label.text = "Nome:"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = .left
+        label.textColor = Constants.textColor
         return label
     }()
-    // instruir o usuario a digitar - det. ui
-    
+
     private let nameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Nome"
+        textField.placeholder = "Digite o seu nome"
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor(red: 250/255, green: 237/255, blue: 205/255, alpha: 1).cgColor
+        textField.layer.borderColor = Constants.yellowColorBorder
         textField.layer.cornerRadius = 5
-        // cria o campo de texto pro usuario digitar o nome - det. ui
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 40))
         textField.leftView = paddingView
         textField.leftViewMode = .always
         return textField
     }()
-    // add espaco de margem a esquerda
-    
+
+    private let avatarLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Gostaria de escolher um avatar?"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = .left
+        label.textColor = Constants.textColor
+        return label
+    }()
+
+    private let avatarButton1: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Escolher Agora", for: .normal)
+        button.backgroundColor = Constants.yellowColor
+        button.layer.cornerRadius = 10
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        return button
+    }()
+
+    private let avatarButton2: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Escolher Depois", for: .normal)
+        button.backgroundColor = Constants.yellowColor
+        button.layer.cornerRadius = 10
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        return button
+    }()
+
     private let sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Enviar", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20) // Aumentar o tamanho e colocar em negrito
-        
-        // Cores do título para estados normal e desabilitado
-        button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1), for: .normal)    // branco ativado
-        button.setTitleColor(UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 0.5), for: .disabled)  // branco desativado
-        
-        // Background inicial para desativado
-        button.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)
-        
+        button.setTitle("Criar Conta", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.white, for: .disabled)
+        button.backgroundColor = Constants.orangeColorDisable
         button.layer.cornerRadius = 10
         button.isEnabled = false
         return button
     }()
-    // cria o botao pro usu. enviar o nome - det. ui
+
+    // Guarda nome da imagem do avatar escolhido
+    private var selectedAvatarName: String?
+
+    // Constraint para o top do realNameLabel (para ajustar dinamicamente)
+    private var realNameLabelTopConstraint: NSLayoutConstraint!
+
+    //inicializador seria aqui se precisasse
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameTextField.delegate = self
+
+        nameTextField.delegate = self //se torna o delegate do campo de texto
+        view.backgroundColor = .white
+        title = "Cadastro"
+        navigationItem.backButtonTitle = ""
+        setupHierarch()
+        setupConfig()
+        setupConstraints()
+    }
+    
+    // verifica se a tela esta em modo paisagem ou retrato e ajusta as constraints no momento em que a tela vai aparecer
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        view.backgroundColor = UIColor(red: 254/255, green: 250/255, blue: 224/255, alpha: 1)
-        
-        // elementos a serem apresentados
-        view.addSubview(instructionLabel)
-        view.addSubview(nameTextField)
-        view.addSubview(sendButton)
-        
-        // Configurar constraints
+        let isPortrait = UIScreen.main.bounds.height > UIScreen.main.bounds.width
+        realNameLabelTopConstraint.constant = isPortrait ? 80 : 20
+        view.layoutIfNeeded()
+    }
+    
+    //muda o layout ao girar o aparelho
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: { _ in
+            let isPortrait = size.height > size.width
+            self.realNameLabelTopConstraint.constant = isPortrait ? 80 : 20
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+
+        }, completion: nil)
+    }
+
+    private func setupHierarch() {
+        let views = [realNameLabel, nameTextField, avatarLabel, avatarButton1, avatarButton2, sendButton]
+        views.forEach {view.addSubview($0)}
+    }
+    
+    private func setupConfig() {
+        avatarButton1.addTarget(self, action: #selector(chooseAvatarNow), for: .touchUpInside)
+        avatarButton2.addTarget(self, action: #selector(chooseAvatarLater), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setupConstraints() {
+        realNameLabelTopConstraint = realNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80)
+
         NSLayoutConstraint.activate([
-            instructionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            instructionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            nameTextField.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: 20),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            realNameLabelTopConstraint,
+            realNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            realNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+
+            nameTextField.topAnchor.constraint(equalTo: realNameLabel.bottomAnchor, constant: 25),
+            nameTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            nameTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
-            
-            sendButton.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
+
+            avatarLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 40),
+            avatarLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            avatarLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+
+            avatarButton1.topAnchor.constraint(equalTo: avatarLabel.bottomAnchor, constant: 15),
+            avatarButton1.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            avatarButton1.trailingAnchor.constraint(equalTo: avatarButton2.leadingAnchor, constant: -10),
+            avatarButton1.heightAnchor.constraint(equalToConstant: 40),
+            avatarButton1.widthAnchor.constraint(equalTo: avatarButton2.widthAnchor),
+
+            avatarButton2.topAnchor.constraint(equalTo: avatarLabel.bottomAnchor, constant: 15),
+            avatarButton2.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            avatarButton2.heightAnchor.constraint(equalToConstant: 40),
+
+            // Ajusta o botão enviar respeitando safeArea, para evitar ficar por baixo do "notch" na horizontal
+            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
             sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             sendButton.widthAnchor.constraint(equalToConstant: 200),
             sendButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
-        // Ação do botão
-        sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+    }
+
+    //acao para escolher avatar agr
+    @objc private func chooseAvatarNow() {
+        let avatarVC = AvatarSelectionViewController()
+        avatarVC.delegate = self
+        avatarVC.modalPresentationStyle = .custom
+        avatarVC.transitioningDelegate = self
+        present(avatarVC, animated: true)
     }
     
-    @objc func sendButtonTapped() {
-        // Verificar se o campo de texto foi preenchido com algo, se nao erro.
+    //escolher avatar depois
+    @objc private func chooseAvatarLater() {
+        selectedAvatarName = "avatar7"
+        print("Avatar padrão definido: avatar7")
+        updateSendButtonState(for: nameTextField.text ?? "")
+    }
+
+    //criar conta
+    @objc private func sendButtonTapped() {
         guard let userName = nameTextField.text, !userName.isEmpty else {
             let alert = UIAlertController(title: "Erro", message: "Por favor, insira seu nome.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             present(alert, animated: true)
             return
         }
-        
-        // Criar o SecondViewController e passar o nome
-        let secondViewController = SecondViewController()
-        secondViewController.userName = userName
-        
-        // Navegar para a segunda tela
-        navigationController?.pushViewController(secondViewController, animated: true)
+
+        let secondVC = SecondViewController()
+        secondVC.userName = userName
+        secondVC.userAvatarName = selectedAvatarName
+        navigationController?.pushViewController(secondVC, animated: true)
     }
-    //funcao de habilitar/desabilitar
+
+    //validacoes para o botao de criar conta
     private func updateSendButtonState(for text: String) {
-        if text.count >= 3 { //mudei para 3 caracteres
+        let isNameValid = text.count >= 3
+        let isAvatarSelected = selectedAvatarName != nil
+
+        if isNameValid && isAvatarSelected {
             sendButton.isEnabled = true
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 1)  // cor 100% quando o botao está ativo
-        } else { //add else para desabilitar caso menor que 3.
+            sendButton.backgroundColor = Constants.orangeColorEnable
+        } else {
             sendButton.isEnabled = false
-            sendButton.backgroundColor = UIColor(red: 212/255, green: 163/255, blue: 115/255, alpha: 0.5)  // cor opaca quando está desativado
+            sendButton.backgroundColor = Constants.orangeColorDisable
         }
     }
 }
 
+//acompanha campo de texto e atualiza botao
 extension FirstViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
-        
+
         if let currentText = textField.text as NSString? {
             let updatedText = currentText.replacingCharacters(in: range, with: string)
-            updateSendButtonState(for: updatedText) //atualiza o botao de acordo com que o usuario digita
+            updateSendButtonState(for: updatedText)
         }
-        
         return true
+    }
+}
+
+//AvatarSelection vai chamar esse metodo quando o usuario escolher o avatar
+extension FirstViewController: AvatarSelectionDelegate {
+    func didSelectAvatar(named avatarName: String) {
+        selectedAvatarName = avatarName
+        print("Avatar selecionado: \(avatarName)")
+        updateSendButtonState(for: nameTextField.text ?? "")
+    }
+}
+
+//definicoes customizadas - tela modal de escolha do avatar
+extension FirstViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController,
+                                presenting: UIViewController?,
+                                source: UIViewController)
+    -> UIPresentationController? {
+        return HalfSizePresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
 
