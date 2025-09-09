@@ -48,4 +48,18 @@ Destacar o dado recebido na segunda tela (em estudo).
 
 https://github.com/user-attachments/assets/18f9e122-f35d-4e21-a92a-dd6135634eff
 
+### Novas funcionalidades estudadas e implementadas nesta fase
+* Inclusão da tela de boas-vindas com texto estilizado e gif animado (usando SDWebImage)
+* Tela de cadastro aprimorada, com opções para escolher avatar imediatamente ou depois
+* Implementação de um modal customizado para seleção de avatar usando UIPresentationController
+* Comunicação entre telas via delegate para receber o avatar selecionado
+* Feed atualizado que exibe avatar, nome e uma mensagem de boas-vindas personalizada
+* Botão de logout que retorna para a tela inicial, limpando dados do usuário
+* Validação avançada do formulário que habilita o botão "Criar Conta" somente quando nome e avatar são válidos
+* Suporte a diferentes orientações de tela com ajuste dinâmico de layout
+* Uso do SceneDelegate para inicializar o app com a tela de boas-vindas dentro de uma UINavigationController
+
+https://github.com/user-attachments/assets/40dc1ae6-18a9-45d9-9791-454a121844ee
+
+
 
