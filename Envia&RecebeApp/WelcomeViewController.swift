@@ -10,9 +10,9 @@ import SDWebImage
 
 class WelcomeViewController: UIViewController {
     
+    //label inicial e todos as suas configuracoes
     private let welcomeLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.textColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
         label.textAlignment = .center
@@ -29,109 +29,130 @@ class WelcomeViewController: UIViewController {
         let fonteNegrito = UIFont.boldSystemFont(ofSize: 20)
         
         attributedText.addAttribute(.font, value: fonteNormal, range: NSRange(location: 0, length: texto.count))
-        
         if let primeiroQuebra = texto.firstIndex(of: "\n") {
             let distancia = texto.distance(from: texto.startIndex, to: primeiroQuebra)
             attributedText.addAttribute(.font, value: fonteNegrito, range: NSRange(location: 0, length: distancia))
-        } else {
-            attributedText.addAttribute(.font, value: fonteNegrito, range: NSRange(location: 0, length: texto.count))
         }
         
         label.attributedText = attributedText
         return label
     }()
     
+    //exibe gif
     private let gifImageView: SDAnimatedImageView = {
         let imageView = SDAnimatedImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
+        imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        imageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
+    //botao
     private let continueButton: UIButton = {
         let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Continuar", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor(red: 247/255, green: 105/255, blue: 85/255, alpha: 1)
         button.layer.cornerRadius = 12
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 55).isActive = true
         return button
+    }()
+    
+    //espaçador invisivel
+    private let spacerView = UIView()
+    
+    //organizaçao vertical
+    private let stackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 20
+        sv.alignment = .fill
+        sv.distribution = .equalSpacing
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    
+    //container geral 'moldura'
+    private let containerView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
-        view.addSubview(welcomeLabel)
-        view.addSubview(gifImageView)
-        view.addSubview(continueButton)
         
+        //permite usar auto layout
+        welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        //hierarquia de views
+        view.addSubview(containerView)
+        containerView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(welcomeLabel)
+        stackView.addArrangedSubview(gifImageView)
+        stackView.addArrangedSubview(spacerView)
+        stackView.addArrangedSubview(continueButton)
+        
+        let guide = view.safeAreaLayoutGuide
+        
+        //constraints
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            welcomeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            welcomeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            // container preenchendo safe area com margens laterais
+            containerView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 20),
+            containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -20),
+            containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -20),
             
-            gifImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 10),
-            gifImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            gifImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            gifImageView.heightAnchor.constraint(equalTo: gifImageView.widthAnchor, multiplier: 0.75),
+            // stackView fixada nas bordas do container
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
-            continueButton.topAnchor.constraint(greaterThanOrEqualTo: gifImageView.bottomAnchor, constant: 30),
-            continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
-            continueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            continueButton.widthAnchor.constraint(equalToConstant: 220),
-            continueButton.heightAnchor.constraint(equalToConstant: 55)
+            // limita a altura do gif para ate 35% da altura da tela
+            gifImageView.heightAnchor.constraint(lessThanOrEqualTo: containerView.heightAnchor, multiplier: 0.35),
+            
+            // Espaçador para evitar que elementos grudem
+            spacerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 10)
         ])
         
+        //açao do botao
+        continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
+        loadGif()
+    }
+    
+    //carrega e exibe o gif
+    private func loadGif() {
         if let path = Bundle.main.path(forResource: "gif_01", ofType: "gif"),
            let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
-            let animatedImage = SDAnimatedImage(data: data)
-            gifImageView.image = animatedImage
+            gifImageView.image = SDAnimatedImage(data: data)
         }
-        
-        continueButton.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
-        
-        // Mantém o backButtonTitle vazio para a próxima tela
-        navigationItem.backButtonTitle = ""
     }
     
+    //remove e restaura a NB
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Remove linha da navigation bar só nesta tela
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-        appearance.shadowColor = .clear  // Remove a linha
-        
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        
-        navigationController?.navigationBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Restaura a configuração global do SceneDelegate ao sair desta tela
-        if let navBar = navigationController?.navigationBar {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .white
-            appearance.titleTextAttributes = [
-                .foregroundColor: UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1),
-                .font: UIFont.boldSystemFont(ofSize: 20)
-            ]
-            navBar.standardAppearance = appearance
-            navBar.scrollEdgeAppearance = appearance
-            navBar.compactAppearance = appearance
-            navBar.tintColor = UIColor(red: 39/255, green: 105/255, blue: 166/255, alpha: 1)
-        }
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     @objc private func continueTapped() {
+      
+        let backItem = UIBarButtonItem()
+        backItem.title = "" // remove o nome voltar ao lado do chevron
+        navigationItem.backBarButtonItem = backItem
+        
+        //navega para a prox tela
         let firstVC = FirstViewController()
         navigationController?.pushViewController(firstVC, animated: true)
     }

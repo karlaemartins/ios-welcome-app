@@ -7,16 +7,21 @@
 
 import UIKit
 
+// definição do protocolo
 protocol AvatarSelectionDelegate: AnyObject {
+    // func para receber o nome do avatar selecionado
     func didSelectAvatar(named avatarName: String)
 }
 
 class AvatarSelectionViewController: UIViewController {
-
+    
+    // var que referencia quem vai receber o avatar selecionado
     weak var delegate: AvatarSelectionDelegate?
 
+    // array com o nome dos avatars
     private let avatars = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6"]
 
+    // título da tela
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,16 +42,18 @@ class AvatarSelectionViewController: UIViewController {
         setupAvatarButtons()
     }
 
+    // definicoes do título
     private func setupTitle() {
         view.addSubview(titleLabel)
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             titleLabel.heightAnchor.constraint(equalToConstant: 28)
         ])
     }
 
+    // definicoes para os botoes de avatar
     private func setupAvatarButtons() {
         let rowsStack = UIStackView()
         rowsStack.axis = .vertical
@@ -87,11 +94,13 @@ class AvatarSelectionViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             rowsStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
-            rowsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            rowsStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            rowsStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            rowsStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            rowsStack.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15)
         ])
     }
 
+    // metodo para quando o usu escolhe o avatar
     @objc private func avatarTapped(_ sender: UIButton) {
         let selectedAvatar = avatars[sender.tag]
         delegate?.didSelectAvatar(named: selectedAvatar)
