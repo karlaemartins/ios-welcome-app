@@ -1,65 +1,67 @@
-# 📱 Envia & Recebe
+# iOS Welcome App - Projeto de Estudo
 
-Este projeto foi desenvolvido com fins **educacionais**, como parte dos meus estudos iniciais de desenvolvimento iOS com Swift. O objetivo principal foi entender como criar um app básico com **duas telas**, **navegação entre elas**, **envio de dados de uma tela para outra**, e **interações simples com o usuário** usando UIKit.
+Aplicativo desenvolvido em **UIKit** com foco no estudo de navegação entre telas, comunicação entre ViewControllers, validação de formulários e construção de interfaces programaticamente.
 
-## A proposta do app:
-1. Exibir uma **primeira tela** que solicite do usuário o envio de algum dado, neste caso, o seu nome;
-2. Ao preencher e clicar em "Enviar", navegar para a **segunda tela**;
-3. A segunda tela exibe uma **mensagem personalizada de boas-vindas**, usando o nome que foi inserido.
+Ao longo da evolução do projeto, novas funcionalidades foram adicionadas, incluindo seleção de avatar, tela de boas-vindas personalizada, feed do usuário e melhorias na experiência de uso.
 
-Além disso, foi adicionado um **alerta (pop-up)** para garantir que o campo de nome não seja enviado em branco.
+## O que o app faz
 
-## Tecnologias e Ferramentas Utilizadas:
+- Permite criar um perfil informando o nome do usuário
+- Permite escolher um avatar durante o cadastro ou posteriormente
+- Exibe uma tela de boas-vindas personalizada
+- Exibe um feed contendo avatar, nome e mensagem de boas-vindas
+- Permite realizar logout, retornando à tela inicial
+- Valida o formulário antes de permitir a criação da conta
+- Exibe alertas quando informações obrigatórias não são preenchidas
+- Ajusta o layout para diferentes orientações de tela
 
-- **Linguagem:** Swift
-- **Interface:** UIKit (sem uso de Storyboard)
-- **Navegação entre telas:** `UINavigationController`
-- **Componentes visuais:** `UILabel`, `UITextField`, `UIButton`, `UIAlertController`
-- **Layout com Auto Layout (`NSLayoutConstraint`)**
-- **Customização de cores usando RGB**
+## Arquitetura
 
-## O que foi estudado e aplicado:
+O projeto foi estruturado utilizando **UIKit programático**, explorando navegação entre telas, comunicação através de Delegates e componentes personalizados para construção da interface.
 
-- **Criação de telas com UIKit programaticamente**
-- **Organização de layout com Auto Layout**
-- **Transição entre view controllers com `UINavigationController`**
-- **Passagem de dados entre telas (envio do nome digitado)**
-- **Exibição de pop-up de alerta (`UIAlertController`)**
-- **Estilização de texto com `NSMutableAttributedString`**
-- **Configuração de botão de voltar com ícone e cor customizada**
+## Decisões importantes
 
-## Estrutura do Projeto:
+- UIKit programático (sem Storyboard)
+- Navegação utilizando UINavigationController
+- Comunicação entre telas utilizando Delegate Pattern
+- Modal customizado utilizando UIPresentationController
+- Validação de formulário antes da criação da conta
+- Inicialização do fluxo utilizando SceneDelegate
+- Organização da interface utilizando Auto Layout
 
-### `FirstViewController.swift` que contém:
-- Um texto com instrução;
-- Um campo de texto para receber do usuário o dado (nome);
-- Um botão de "Enviar";
-- Um alerta caso o botão seja pressionado sem que um dado (nome) seja inserido.
-Ao digitar um nome e pressionar "Enviar", o app navega para a segunda tela passando esse nome como dado.
-
-### `SecondViewController.swift`:
-A segunda tela recebe o dado (nome) digitado na primeira tela e mostra uma mensagem personalizada de boas-vindas, estilizada com cor.
-Também possui:
-- Um botão de "voltar" com ícone `chevron.left` que também teve sua cor personalizada. 
-
-
-### Dificuldades encontradas: 
-Destacar o dado recebido na segunda tela (em estudo). 
 
 https://github.com/user-attachments/assets/18f9e122-f35d-4e21-a92a-dd6135634eff
 
-### Novas funcionalidades estudadas e implementadas nesta fase
-* Inclusão da tela de boas-vindas com texto estilizado e gif animado (usando SDWebImage)
-* Tela de cadastro aprimorada, com opções para escolher avatar imediatamente ou depois
-* Implementação de um modal customizado para seleção de avatar usando UIPresentationController
-* Comunicação entre telas via delegate para receber o avatar selecionado
-* Feed atualizado que exibe avatar, nome e uma mensagem de boas-vindas personalizada
-* Botão de logout que retorna para a tela inicial, limpando dados do usuário
-* Validação avançada do formulário que habilita o botão "Criar Conta" somente quando nome e avatar são válidos
-* Suporte a diferentes orientações de tela com ajuste dinâmico de layout
-* Uso do SceneDelegate para inicializar o app com a tela de boas-vindas dentro de uma UINavigationController
+
+## Melhorias implementadas
+
+Durante a evolução do projeto foram adicionadas novas funcionalidades:
+
+- Inclusão de tela de boas-vindas com texto estilizado
+- Exibição de GIF animado utilizando SDWebImage
+- Tela de cadastro aprimorada com seleção de avatar
+- Implementação de modal customizado para escolha do avatar
+- Comunicação entre telas utilizando Delegates
+- Feed personalizado exibindo avatar e nome do usuário
+- Botão de logout retornando para a tela inicial
+- Validação dinâmica do formulário, habilitando o botão **Criar Conta** apenas quando os dados são válidos
+- Suporte a diferentes orientações de tela
+
+## Conceitos praticados
+
+- Swift
+- UIKit
+- UINavigationController
+- UILabel
+- UITextField
+- UIButton
+- UIAlertController
+- Auto Layout
+- NSLayoutConstraint
+- Delegate Pattern
+- UIPresentationController
+- SceneDelegate
+- SDWebImage
+- NSMutableAttributedString
 
 https://github.com/user-attachments/assets/40dc1ae6-18a9-45d9-9791-454a121844ee
-
-
-
